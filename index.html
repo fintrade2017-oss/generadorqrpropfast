@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generador de QR VIP — Propfastinvest Staff</title>
+<meta name="description" content="Generador interno de códigos QR de invitación VIP para empleados de Propfastinvest Group Ltd.">
+<style>
+:root{
+  --navy:#012458; --navy-deep:#001a3d; --navy-soft:#0a2f63;
+  --gold:#F9C300; --gold-soft:#fcd34d; --gold-deep:#c79a00;
+  --ink:#0b0f1a; --paper:#f5f4ef; --muted:#aeb6c4;
+  --line:rgba(249,195,0,.25);
+  --shadow:0 18px 50px rgba(0,10,30,.45);
+  --serif:"Georgia","Times New Roman",serif;
+  --sans:"Helvetica Neue",Arial,"Segoe UI",sans-serif;
+  --danger:#ef4444; --ok:#39d98a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);color:var(--paper);background:var(--ink);
+  line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;
+  background:linear-gradient(180deg,var(--navy-deep) 0%,var(--ink) 60%);
+}
+a{color:var(--gold);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ===== HEADER ===== */
+.top{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:14px 24px;background:rgba(1,26,61,.88);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);flex-wrap:wrap;
+}
+.top__brand{display:flex;align-items:center;gap:12px}
+.top__logo{
+  width:44px;height:44px;border-radius:50%;background:var(--gold);color:var(--navy-deep);
+  display:flex;align-items:center;justify-content:center;font-family:var(--serif);
+  font-size:20px;font-weight:700;flex-shrink:0;
+}
+.top__name{font-family:var(--serif);font-size:15px;letter-spacing:.14em;color:var(--paper);text-transform:uppercase;line-height:1.1}
+.top__name b{color:var(--gold);display:block;font-size:10.5px;letter-spacing:.3em;font-weight:700}
+.top__tag{color:var(--muted);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase}
+.top__back{
+  color:var(--muted);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  border:1px solid var(--line);padding:7px 12px;border-radius:4px;transition:.25s;background:transparent;cursor:pointer;
+}
+.top__back:hover{color:var(--gold);border-color:var(--gold)}
+
+/* ===== HERO STRIP ===== */
+.strip{padding:38px 24px 14px;text-align:center}
+.strip__kicker{color:var(--gold);letter-spacing:.34em;font-size:11px;text-transform:uppercase;margin-bottom:10px}
+.strip__title{font-family:var(--serif);font-size:clamp(22px,3.4vw,32px);color:#fff;line-height:1.2}
+.strip__title span{color:var(--gold)}
+.strip__sub{color:var(--muted);font-size:13.5px;margin-top:8px;max-width:640px;margin-left:auto;margin-right:auto}
+
+/* ===== LAYOUT ===== */
+.wrap{max-width:1080px;margin:0 auto;padding:18px 24px 60px}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start}
+.card{
+  background:linear-gradient(160deg,rgba(10,47,99,.55),rgba(0,10,30,.55));
+  border:1px solid var(--line);border-radius:12px;padding:26px 24px;
+}
+.card__head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.card__ic{
+  width:34px;height:34px;border-radius:8px;background:rgba(249,195,0,.12);border:1px solid var(--gold);
+  color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;flex-shrink:0;
+}
+.card__title{color:#fff;font-family:var(--serif);font-size:18px;line-height:1.2}
+.card__title small{display:block;color:var(--muted);font-size:11.5px;font-family:var(--sans);letter-spacing:.06em;margin-top:2px}
+
+/* ===== FORM ===== */
+.field{display:flex;flex-direction:column;margin-bottom:16px}
+.field__label{font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;display:flex;justify-content:space-between;gap:8px}
+.field__label .hint{color:#6b7793;text-transform:none;letter-spacing:0;font-size:11px}
+.field__input{
+  background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:6px;padding:11px 13px;
+  color:#fff;font-size:14px;font-family:var(--sans);outline:none;transition:.25s;width:100%;
+}
+.field__input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(249,195,0,.15)}
+.field__input::placeholder{color:#5d6a82}
+.field__input.invalid{border-color:var(--danger);box-shadow:0 0 0 3px rgba(239,68,68,.15)}
+textarea.field__input{resize:vertical;min-height:60px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.exp-box{
+  background:rgba(249,195,0,.07);border:1px dashed var(--line);border-radius:8px;
+  padding:10px 14px;margin:-4px 0 18px;font-size:12.5px;color:var(--gold-soft);
+}
+.exp-box b{color:var(--gold);font-family:var(--serif)}
+.btn{
+  background:var(--gold);color:var(--navy-deep);border:none;border-radius:6px;
+  padding:13px 22px;font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:800;
+  cursor:pointer;transition:.25s;width:100%;
+}
+.btn:hover{background:var(--gold-soft)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn--ghost{
+  background:transparent;border:1px solid var(--line);color:var(--muted);
+  font-weight:700;
+}
+.btn--ghost:hover{border-color:var(--gold);color:var(--gold);background:rgba(249,195,0,.06)}
+
+/* ===== QR PANEL ===== */
+.qr-stage{
+  background:#fff;border-radius:10px;padding:18px;min-height:260px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+  border:1px solid var(--line);
+}
+.qr-stage.empty::before{
+  content:"El código QR aparecerá aquí";color:#9aa7bd;font-size:13px;font-family:var(--sans);text-align:center;
+}
+.qr-stage img,.qr-stage canvas{max-width:100%;height:auto;display:block}
+.qr-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.qr-url{
+  background:rgba(0,0,0,.35);border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+  font-size:11.5px;color:#cfe0f5;word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace;line-height:1.5;
+}
+.qr-url[hidden]{display:none}
+.qr-url b{color:var(--gold);display:block;font-family:var(--sans);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--navy-soft);border:1px solid var(--gold);color:var(--gold-soft);
+  padding:12px 22px;border-radius:8px;font-size:13px;letter-spacing:.04em;
+  box-shadow:var(--shadow);opacity:0;transition:.3s;z-index:200;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.err{border-color:var(--danger);color:#ff9b9b}
+
+/* ===== HISTORY ===== */
+.history{margin-top:18px}
+.history__title{color:var(--muted);font-size:11px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:10px}
+.history__list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.history__item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:8px;padding:10px 12px;
+}
+.history__item b{color:#fff;font-family:var(--serif);font-size:13.5px}
+.history__item span{color:var(--muted);font-size:11.5px}
+.history__item button{
+  background:transparent;border:1px solid var(--line);color:var(--gold);
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;
+  padding:6px 10px;border-radius:4px;cursor:pointer;transition:.25s;flex-shrink:0;
+}
+.history__item button:hover{background:rgba(249,195,0,.1)}
+.history__empty{color:#6b7793;font-size:12.5px;font-style:italic}
+
+/* ===== FOOTER ===== */
+.foot{padding:24px;text-align:center;color:var(--muted);font-size:11.5px;letter-spacing:.06em;border-top:1px solid rgba(255,255,255,.08)}
+.foot b{color:var(--gold)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:760px){
+  .grid{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .qr-actions{grid-template-columns:1fr}
+  .top{padding:12px 16px}
+  .wrap{padding:14px 16px 40px}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="top">
+  <div class="top__brand">
+    <div class="top__logo">P</div>
+    <div>
+      <div class="top__name">Propfastinvest<b>Group Ltd</b></div>
+      <div class="top__tag">Herramienta interna · Staff</div>
+    </div>
+  </div>
+  <a class="top__back" href="https://propfastinvest.netlify.app/" target="_blank" rel="noopener" id="backLink">↩ Volver al sitio</a>
+</header>
+
+<!-- ============ HERO STRIP ============ -->
+<section class="strip">
+  <div class="strip__kicker">Staff Tool · VIP Invitations</div>
+  <h1 class="strip__title">Generador de <span>códigos QR VIP</span></h1>
+  <p class="strip__sub">Crea pases de invitación con validez limitada para la sección privada de enlaces del sitio principal de Propfastinvest.</p>
+</section>
+
+<!-- ============ MAIN ============ -->
+<main class="wrap">
+  <div class="grid">
+
+    <!-- FORM -->
+    <section class="card" aria-labelledby="formTitle">
+      <div class="card__head">
+        <div class="card__ic">✎</div>
+        <div class="card__title" id="formTitle">Datos de la invitación<small>Rellena los campos y pulsa generar.</small></div>
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="siteUrl">
+          <span>URL del sitio principal</span>
+          <span class="hint">donde está la sección VIP</span>
+        </label>
+        <input class="field__input" id="siteUrl" type="url" placeholder="https://propfastinvest.netlify.app/" value="https://propfastinvest.netlify.app/">
+      </div>
+
+      <div class="field">
+        <label class="field__label" for="guestName">
+          <span>Nombre del invitado *</span>
+          <span class="hint">aparecerá en el saludo VIP</span>
+        </label>
+        <input class="field__input" id="guestName" type="text" placeholder="Ej.: Juan Pérez / ACME Holdings" autocomplete="off">
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label class="field__label" for="validHours"><span>Validez (horas)</span></label>
+          <input class="field__input" id="validHours" type="number" min="1" max="720" step="1" value="36">
+        </div>
+        <div class="field">
+          <label class="field__label" for="masterKey">
+            <span>Clave maestra</span>
+            <span class="hint">CLAVE_MAESTRA del sitio</span>
+          </label>
+          <input class="field__input" id="masterKey" type="text" value="CLUB_PRIVADO_2026" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="exp-box" id="expBox" hidden>
+        El pase será válido hasta: <b id="expDate">—</b>
+      </div>
+
+      <button class="btn" id="generateBtn" type="button">Generar código QR</button>
+    </section>
+
+    <!-- QR PREVIEW -->
+    <section class="card" aria-labelledby="qrTitle">
+      <div class="card__head">
+        <div class="card__ic">▦</div>
+        <div class="card__title" id="qrTitle">Código generado<small>descárgalo o copia el enlace.</small></div>
+      </div>
+
+      <div class="qr-stage empty" id="qrStage"></div>
+
+      <div class="qr-actions">
+        <button class="btn btn--ghost" id="downloadBtn" type="button" disabled>⬇ Descargar PNG</button>
+        <button class="btn btn--ghost" id="copyBtn" type="button" disabled>⧉ Copiar URL</button>
+      </div>
+
+      <div class="qr-url" id="qrUrlBox" hidden>
+        <b>Enlace VIP</b>
+        <span id="qrUrl"></span>
+      </div>
+
+      <div class="history">
+        <div class="history__title">Generados en esta sesión</div>
+        <ul class="history__list" id="historyList">
+          <li class="history__empty">Aún no has generado ningún código.</li>
+        </ul>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  © 2026 <b>Propfastinvest Group Ltd</b> · Herramienta interna para empleados · No compartir fuera de la organización.
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ QR LIB (CDN) ============ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" referrerpolicy="no-referrer"></script>
+<script>
+/* ===================== ESTADO ===================== */
+/* Compatibilidad del formato con el guardia VIP del sitio principal:
+   token = btoa(encodeURIComponent(JSON.stringify({key, invitado, exp})))
+   URL   = `${siteUrl}?vip=${token}`
+   (mismo formato que usa la función vipGuard del index.html principal). */
+const $ = (id)=>document.getElementById(id);
+const siteUrlEl=$('siteUrl'), guestEl=$('guestName'), hoursEl=$('validHours'),
+      keyEl=$('masterKey'), expBox=$('expBox'), expDate=$('expDate'),
+      generateBtn=$('generateBtn'), stage=$('qrStage'),
+      downloadBtn=$('downloadBtn'), copyBtn=$('copyBtn'),
+      qrUrlBox=$('qrUrlBox'), qrUrlEl=$('qrUrl'),
+      historyList=$('historyList'), toast=$('toast');
+let currentQr=null;       /* instancia QRCode */
+let currentUrl='';        /* última URL generada */
+let history=[];           /* {name, url, exp} */
+
+function showToast(msg, isErr){
+  toast.textContent=msg;
+  toast.classList.toggle('err', !!isErr);
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t=setTimeout(()=>toast.classList.remove('show'), 2400);
+}
+
+/* ===================== GENERACIÓN ===================== */
+function buildToken(name, hours, key){
+  const exp = Date.now() + Math.max(1, parseInt(hours,10)||36)*3600*1000;
+  const payload = JSON.stringify({key:key, invitado:name, exp:exp});
+  const token = btoa(encodeURIComponent(payload));
+  return {token, exp};
+}
+function normalizeSite(u){
+  let s=(u||'').trim();
+  if(!s) return '';
+  if(!/^https?:\/\//i.test(s)) s='https://'+s;
+  // quitar fragmentos/extras pero conservar path; asegurar barra final simple
+  return s;
+}
+function fmtDate(ms){
+  try{
+    return new Date(ms).toLocaleString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }catch(e){ return new Date(ms).toString(); }
+}
+function updateExpiryHint(){
+  const h=parseInt(hoursEl.value,10);
+  if(!h || h<1){ expBox.hidden=true; return; }
+  const exp=Date.now()+h*3600*1000;
+  expDate.textContent=fmtDate(exp);
+  expBox.hidden=false;
+}
+
+function clearStage(){
+  stage.innerHTML='';
+  stage.classList.add('empty');
+}
+
+function renderQr(url){
+  if(typeof QRCode==='undefined'){
+    showToast('No se pudo cargar la librería QR (revisa tu conexión).', true);
+    return false;
+  }
+  clearStage();
+  stage.classList.remove('empty');
+  /* tamaño cómodo para impresión y escaneo */
+  currentQr=new QRCode(stage,{
+    text:url, width:240, height:240,
+    colorDark:'#001a3d', colorLight:'#ffffff',
+    correctLevel:QRCode.CorrectLevel.M
+  });
+  return true;
+}
+
+function generate(){
+  // validar
+  let invalid=false;
+  const site=normalizeSite(siteUrlEl.value);
+  const name=guestEl.value.trim();
+  const hours=parseInt(hoursEl.value,10);
+  const key=keyEl.value.trim();
+
+  siteUrlEl.classList.remove('invalid'); guestEl.classList.remove('invalid');
+
+  if(!site){ siteUrlEl.classList.add('invalid'); invalid=true; }
+  if(!name){ guestEl.classList.add('invalid'); invalid=true; }
+  if(!hours || hours<1){ hoursEl.classList.add('invalid'); invalid=true; }
+  if(!key){ keyEl.classList.add('invalid'); invalid=true; }
+  if(invalid){ showToast('Revisa los campos obligatorios.', true); return; }
+
+  // construir URL final (conservar query/path previo del sitio si lo hubiera)
+  let base=site;
+  // si la URL ya trae query, usamos & en vez de ?
+  const sep = base.indexOf('?')>=0 ? '&' : '?';
+  const {token, exp} = buildToken(name, hours, key);
+  const url = base + sep + 'vip=' + encodeURIComponent(token);
+
+  currentUrl=url;
+  const ok=renderQr(url);
+  if(!ok) return;
+
+  // mostrar URL + habilitar acciones
+  qrUrlEl.textContent=url;
+  qrUrlBox.hidden=false;
+  downloadBtn.disabled=false;
+  copyBtn.disabled=false;
+
+  // histórico
+  addHistory(name, url, exp);
+  showToast('Código QR generado ✓');
+}
+
+/* ===================== HISTORIAL ===================== */
+function addHistory(name, url, exp){
+  history.unshift({name, url, exp});
+  if(history.length>8) history=history.slice(0,8);
+  renderHistory();
+}
+function renderHistory(){
+  if(!history.length){
+    historyList.innerHTML='<li class="history__empty">Aún no has generado ningún código.</li>';
+    return;
+  }
+  historyList.innerHTML=history.map((h,i)=>(
+    '<li class="history__item">'+
+      '<div><b>'+esc(h.name)+'</b><br><span>valido hasta '+fmtDate(h.exp)+'</span></div>'+
+      '<button type="button" data-i="'+i+'" class="js-reuse">Reusar</button>'+
+    '</li>'
+  )).join('');
+}
+function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+historyList.addEventListener('click',(e)=>{
+  const btn=e.target.closest('.js-reuse');
+  if(!btn) return;
+  const h=history[parseInt(btn.getAttribute('data-i'),10)];
+  if(!h) return;
+  guestEl.value=h.name;
+  // derivar horas restantes (mínimo 1)
+  const remaining=Math.max(1, Math.round((h.exp-Date.now())/3600000));
+  hoursEl.value=remaining;
+  updateExpiryHint();
+  // recargar URL y QR tal cual (sin recalcular exp)
+  currentUrl=h.url;
+  renderQr(h.url);
+  qrUrlEl.textContent=h.url;
+  qrUrlBox.hidden=false;
+  downloadBtn.disabled=false;
+  copyBtn.disabled=false;
+  showToast('Invitación recargada');
+});
+
+/* ===================== DESCARGA PNG ===================== */
+downloadBtn.addEventListener('click', ()=>{
+  if(!currentUrl){ return; }
+  const img=stage.querySelector('img');
+  const canvas=stage.querySelector('canvas');
+  let dataUrl=null;
+  if(canvas){ try{ dataUrl=canvas.toDataURL('image/png'); }catch(e){ dataUrl=null; } }
+  if(!dataUrl && img && img.src){ dataUrl=img.src; }
+  if(!dataUrl){ showToast('No se pudo exportar el PNG.', true); return; }
+  const a=document.createElement('a');
+  const safe=guestEl.value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40)||'invitado';
+  a.href=dataUrl;
+  a.download='qr-vip-'+safe+'.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  showToast('PNG descargado ✓');
+});
+
+/* ===================== COPIAR URL ===================== */
+copyBtn.addEventListener('click', async ()=>{
+  if(!currentUrl){ return; }
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(currentUrl);
+    } else {
+      const ta=document.createElement('textarea');
+      ta.value=currentUrl; ta.style.position='fixed'; ta.style.opacity='0';
+      document.body.appendChild(ta); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    showToast('URL copiada ✓');
+  }catch(e){
+    showToast('No se pudo copiar.', true);
+  }
+});
+
+/* ===================== EVENTOS ===================== */
+generateBtn.addEventListener('click', generate);
+guestEl.addEventListener('keydown',(e)=>{ if(e.key==='Enter'){ e.preventDefault(); generate(); } });
+hoursEl.addEventListener('input', updateExpiryHint);
+siteUrlEl.addEventListener('change', ()=>{ siteUrlEl.value=normalizeSite(siteUrlEl.value); });
+
+/* ===================== INIT ===================== */
+updateExpiryHint();
+
+/* Aviso si la librería QR no cargó (CDN caído / sin conexión). */
+window.addEventListener('load', ()=>{
+  if(typeof QRCode==='undefined'){
+    generateBtn.disabled=true;
+    showToast('Librería QR no disponible. Revisa tu conexión y recarga.', true);
+  }
+});
+</script>
+</body>
+</html>
